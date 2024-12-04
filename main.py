@@ -1,23 +1,26 @@
 from PyQt6.QtGui import QPainter, QColor
 from PyQt6.QtWidgets import QMainWindow, QApplication
-from PyQt6 import uic
+from UI import Ui_MainWindow
 import sys
 from random import randint
 
-class YellowCircles(QMainWindow):
+class YellowCircles(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui', self)
+        self.initUI()
         self.pushButton.clicked.connect(self.draw_circle)
         self.circles = []
+
+    def initUI(self):
+        self.setupUi(self)
 
     def paintEvent(self, event):
         qp = QPainter()
         qp.begin(self)
 
         for circle in self.circles:
-            x, y, r = circle
-            qp.setBrush(QColor("yellow"))
+            x, y, r, color = circle
+            qp.setBrush(QColor(*color))
             qp.drawEllipse(x, y, r, r)
 
         qp.end()
@@ -26,7 +29,8 @@ class YellowCircles(QMainWindow):
         x = randint(10, self.width() - 20)
         y = randint(50, self.height() - 40)
         r = randint(10, 100)
-        self.circles.append((x, y, r))
+        color = (randint(0, 255), randint(0, 255), randint(0, 255))
+        self.circles.append((x, y, r, color))
         self.update()
 
 
